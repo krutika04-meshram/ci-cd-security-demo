@@ -1,0 +1,29 @@
+name: CI Security Pipeline
+
+on: [push]
+
+jobs:
+  security-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install Bandit
+      run: pip install bandit
+
+    - name: Run SAST (Bandit)
+      run: bandit -r .
+
+    - name: Run SCA (Dependency Check)
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: "Demo"
+        path: "."
+        format: "HTML"
